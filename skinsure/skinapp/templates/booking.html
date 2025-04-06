@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+     <title>Document</title>
+     <style>
+  
+    .navbar {
+            background-color: #343a40; 
+        }
+
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #ffffff; 
+            font-size: 18px; 
+        }
+		input{
+			height: 60px;
+		}
+
+    .booking{
+      margin-top: 20px;
+    }
+		label{
+			font-size: medium;
+		}
+    img{
+      margin-top: 50px;
+    }
+    button {
+      width: 450px;
+      margin-top: 10px; 
+      margin-left: 15px;
+    }
+
+     </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg bg-dark">
+    
+    <a class="navbar-brand text-white" href="">Skin Sure</a>
+
+        <ul class="navbar-nav ml-auto"> 
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'index' %}">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="{% url 'bookings' %}">Bookings</a>
+          </li>
+            <li class="nav-item">
+                <a class="nav-link text-white" href="{% url 'logout' %}">Log Out</a>
+            </li>
+        </ul>
+
+</nav>
+
+<div class="container">
+  <div class="row">
+<div class="col-md-6">
+  <img src="{% static 'assets/img/skin3.jpg' %}">
+</div>
+        
+        <div class="booking col-md-6">
+
+             <h1 style="text-align: center;">Doctor Consultation</h1>
+             <h3 style="text-align: center;">Welcome, {{ name }}</h3>
+    
+        
+         
+    <form class="row" method="POST" action="{% url 'appointment' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="col-md-10">
+        <div class="form-group">
+          <label for="name">Patiant Name</label>
+          <input
+            class="form-control"
+            id="name"
+            placeholder="{{name}}"
+            Value="{{name}}"
+            name="name"
+          />
+          <label for="name">Disease</label>
+          <input
+            class="form-control"
+            id="name"
+            placeholder="{{disease}}"
+            Value="{{disease}}"
+            name="disease"
+          />
+          
+          <label for="Doctor">Select Doctor</label>
+          <select required class="form-control" id="doctor" name="doctor" >
+            <option value="" disabled selected>Select Doctor</option>
+            {% for doctor in doctors %}
+                <option value="{{ doctor.doctor.username }}">{{ doctor.doctor.first_name }}</option>
+            {% endfor %}
+          </select>
+          <label for="date">Select Date</label>
+          <input type='date' name='date' class="form-control"/>
+          <label for="time">Select Time</label>
+          <input type='time' name='time' class="form-control"/>
+          
+          <input type="hidden" name="image_url" value="{{ image_url }}">
+        </div>
+      </div>
+        <button type="submit" class="btn btn-secondary">
+          Book Now
+        </button>
+      
+    </form>
+    {% if messages %}
+   
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    
+{% endif %}
+
+<div class="mt-5">
+  <h2>Available Doctors</h2>
+  <ul class="list-group">
+    {% for doctor in doctors %}
+      <li class="list-group-item">
+        <h4>{{ doctor.doctor.first_name }}</h4>
+        <p>Qualification: {{ doctor.qualification }}</p>
+        <p>Experience: {{ doctor.experience }} years</p>
+        <p>Scheduled Times:</p>
+        <ul>
+          {% for schedule in doctor.consultationschedule_set.all %}
+            <li>{{ schedule.get_day_of_week_display }}: {{ schedule.start_time }} - {{ schedule.end_time }}</li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
