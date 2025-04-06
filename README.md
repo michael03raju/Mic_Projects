@@ -1,2 +1,2 @@
 # Mic_Projects
-This is my project repository.
+This repository contains all of my projects related to data science and web development
